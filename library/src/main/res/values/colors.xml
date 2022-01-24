@@ -45,4 +45,52 @@
 
     <color name="main_disabled_color">#838383</color>
     <color name="main_disabled_stroke_color">#707070</color>
+
+
+    <color name="red_dark">#c62828</color>
+    <color name="red">#f44336</color>
+    <color name="red_light">#ef9a9a</color>
+    <color name="pink_dark">#ad1457</color>
+    <color name="pink">#e91e63</color>
+    <color name="pink_light">#f48fb1</color>
+    <color name="purple_dark">#6a1b9a</color>
+    <color name="purple">#9c27b0</color>
+    <color name="purple_light">#ce93d8</color>
+    <color name="blue_dark">#1565c0</color>
+    <color name="blue">#2196f3</color>
+    <color name="blue_light">#90caf9</color>
+    <color name="cyan_dark">#00838f</color>
+    <color name="cyan">#00bcd4</color>
+    <color name="cyan_light">#80deea</color>
+    <color name="teal_dark">#00695c</color>
+    <color name="teal">#009688</color>
+    <color name="teal_light">#80cbc4</color>
+    <color name="green_dark">#2e7d32</color>
+    <color name="green">#4caf50</color>
+    <color name="green_light">#a5d6a7</color>
+    <color name="yellow_dark">#BAA520</color>
+    <color name="yellow">#EDDA37</color>
+    <color name="yellow_light">#fff59d</color>
+    <color name="orange_dark">#ef6c00</color>
+    <color name="orange">#ff9800</color>
+    <color name="orange_light">#ffcc80</color>
+    <color name="brown_dark">#4e342e</color>
+    <color name="brown">#795548</color>
+    <color name="brown_light">#bcaaa4</color>
+
+    <color name="lightest_gray">#eeeeee</color>
+    <color name="light_gray">#dbdbdb</color>
+    <color name="semi_light_gray">#bbbbbb</color>
+    <color name="semi_gray">#979797</color>
+    <color name="gray">#7e7e7e</color>
+    <color name="dark_gray">#696969</color>
+    <color name="bg_color">#f7f7f7</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="black_effective">#666666</color>
+    <color name="shadow">#d0d8dc</color>
+    <color name="transparent">#00000000</color>
+    <color name="translucent_white">#99ffffff</color>
+    <color name="translucent_black">#88000000</color>
+    <color name="translucent_light_black">#66000000</color>
 </resources>

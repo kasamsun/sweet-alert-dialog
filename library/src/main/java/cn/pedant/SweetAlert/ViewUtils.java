@@ -1,5 +1,6 @@
 package cn.pedant.SweetAlert;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.StateListDrawable;
@@ -14,6 +15,16 @@ public class ViewUtils {
             return dcs.getChildren();
         }
         return null;
+    }
+
+    public static int dpToPx(float dp) {
+        float density = Resources.getSystem().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+    public static float pxToDp(float px) {
+        float densityDpi = Resources.getSystem().getDisplayMetrics().densityDpi;
+        return px / (densityDpi / 160f);
     }
 
 }
