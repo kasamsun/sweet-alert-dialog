@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -86,10 +86,10 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
     private boolean mHideKeyBoardOnDismiss = true;
     private int contentTextSize = 0;
     private int mButtonOrientation = LinearLayout.HORIZONTAL;
-    private ArrayList<CommonDataItem> mListItems = new ArrayList<>();
+    private ArrayList<DataItem> mListItems = new ArrayList<>();
     private ListView mListView;
     private FrameLayout mListViewContainer;
-    private static CustomAdapter listAdapter;
+    private static ArrayAdapter listAdapter;
     private OnSingleSelectionClickListener mSingleSelectionClickListener;
     private boolean mShowListSelection = false;
     private int mSelectedItem;
@@ -99,8 +99,12 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
     private OnSweetTextInputListener mTextInputListener;
     private String mHintText;
     private String mDefaultText;
+
     private int iconSize = 32;
     private boolean tintFlag = true;
+    private Integer mConfirmButtonDrawableLeft = 0;
+    private Integer mCancelButtonDrawableLeft = 0;
+    private Integer mNeutralButtonDrawableLeft = 0;
 
     public static final int NORMAL_TYPE = 0;
     public static final int ERROR_TYPE = 1;
@@ -108,10 +112,10 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
     public static final int WARNING_TYPE = 3;
     public static final int CUSTOM_IMAGE_TYPE = 4;
     public static final int PROGRESS_TYPE = 5;
-    public static final int SINGLE_SELECTION_TYPE = 6;
-    public static final int TEXT_INPUT_TYPE = 7;
-    public static final int DATE_PICKER_TYPE = 8;
-
+    public static final int TEXT_SELECTION_TYPE = 6;
+    public static final int BUTTON_SELECTION_TYPE = 7;
+    public static final int TEXT_INPUT_TYPE = 8;
+    public static final int DATE_PICKER_TYPE = 9;
 
     public static boolean DARK_STYLE = false;
 
@@ -132,7 +136,7 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface OnSingleSelectionClickListener {
-        void onClick(IamAlertDialog sweetAlertDialog, int position, CommonDataItem data);
+        void onClick(IamAlertDialog sweetAlertDialog, int position, DataItem data);
     }
 
     public interface OnSweetTextInputListener {
@@ -219,6 +223,8 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
         };
         mOverlayOutAnim.setDuration(120);
 
+        //
+
         // Default text
         switch(mAlertType) {
             case NORMAL_TYPE:
@@ -232,7 +238,8 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
                 mCancelText = getContext().getString(R.string.action_cancel);
                 break;
             case PROGRESS_TYPE:
-            case SINGLE_SELECTION_TYPE:
+            case TEXT_SELECTION_TYPE:
+            case BUTTON_SELECTION_TYPE:
                 break;
         }
     }
@@ -267,6 +274,16 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
         mNeutralButton.setOnTouchListener(Constants.FOCUS_TOUCH_LISTENER);
         mProgressHelper.setProgressWheel((ProgressWheel) findViewById(R.id.progressWheel));
 
+        if (mConfirmButtonDrawableLeft>0) {
+            mConfirmButton.setCompoundDrawablesWithIntrinsicBounds(mConfirmButtonDrawableLeft, 0, 0, 0);
+        }
+        if (mCancelButtonDrawableLeft>0) {
+            mCancelButton.setCompoundDrawablesWithIntrinsicBounds(mCancelButtonDrawableLeft, 0, 0, 0);
+        }
+        if (mNeutralButtonDrawableLeft>0) {
+            mNeutralButton.setCompoundDrawablesWithIntrinsicBounds(mNeutralButtonDrawableLeft, 0, 0, 0);
+        }
+
         mListView = findViewById(R.id.list);
         mListViewContainer = findViewById(R.id.list_container);
         mInputContainer = findViewById(R.id.input_container);
@@ -299,10 +316,23 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
         mProgressFrame.setVisibility(View.GONE);
 
         mConfirmButton.setVisibility(mHideConfirmButton ? View.GONE : View.VISIBLE);
+        mCancelButton.setVisibility(View.GONE);
+        mNeutralButton.setVisibility(View.GONE);
+
+        // clear change form previous used
+        setConfirmText(getContext().getString(R.string.action_confirm));
+        setCancelText(getContext().getString(R.string.action_cancel));
+        setNeutralText("");
+        mConfirmButtonDrawableLeft = 0;
+        mCancelButtonDrawableLeft = 0;
+        mNeutralButtonDrawableLeft = 0;
+        mConfirmButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        mCancelButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        mNeutralButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
         adjustButtonContainerVisibility();
 
-        mConfirmButton.setBackgroundResource(R.drawable.green_button_background);
+        //mConfirmButton.setBackgroundResource(R.drawable.green_button_background);
         mErrorFrame.clearAnimation();
         mErrorX.clearAnimation();
         mSuccessTick.clearAnimation();
@@ -353,15 +383,20 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
             switch (mAlertType) {
                 case ERROR_TYPE:
                     mErrorFrame.setVisibility(View.VISIBLE);
+
+                    mConfirmButton.setVisibility(View.VISIBLE);
+                    mCancelButton.setVisibility(View.GONE);
                     break;
                 case SUCCESS_TYPE:
                     mSuccessFrame.setVisibility(View.VISIBLE);
                     // initial rotate layout of success mask
                     mSuccessLeftMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(0));
                     mSuccessRightMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(1));
+
+                    mConfirmButton.setVisibility(View.VISIBLE);
+                    mCancelButton.setVisibility(View.GONE);
                     break;
                 case WARNING_TYPE:
-//                    mConfirmButton.setBackgroundResource(R.drawable.red_button_background);
                     mWarningFrame.setVisibility(View.VISIBLE);
                     break;
                 case CUSTOM_IMAGE_TYPE:
@@ -379,9 +414,20 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
             }
 
             if(fromCreate) {
-                if (mAlertType == SINGLE_SELECTION_TYPE) {
+                if (mAlertType == TEXT_SELECTION_TYPE) {
                     mListViewContainer.setVisibility(View.VISIBLE);
-                    listAdapter = new CustomAdapter(mListItems, getContext());
+                    listAdapter = new TextSelectionAdapter(mListItems, getContext());
+                    mListView.setAdapter(listAdapter);
+                    // can show clear by cancel button
+                    if (mCancelClickListener != null) {
+                        mButtonsContainer.setVisibility(View.VISIBLE);
+                        mConfirmButton.setVisibility(View.GONE);
+                    } else {
+                        mButtonsContainer.setVisibility(View.GONE);
+                    }
+                } else if (mAlertType == BUTTON_SELECTION_TYPE) {
+                    mListViewContainer.setVisibility(View.VISIBLE);
+                    listAdapter = new ButtonSelectionAdapter(mListItems, getContext());
                     mListView.setAdapter(listAdapter);
                     // can show clear by cancel button
                     if (mCancelClickListener != null) {
@@ -566,22 +612,11 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
 
     private void setButtonBackgroundColor(Button btn, Integer color) {
         if (btn != null && color != null) {
-            Drawable[] drawableItems = ViewUtils.getDrawable(btn);
-            if (drawableItems != null) {
-                GradientDrawable gradientDrawableUnChecked = (GradientDrawable) drawableItems[1];
-                //solid color
-                gradientDrawableUnChecked.setColor(color);
-                //stroke
-                gradientDrawableUnChecked.setStroke((int) strokeWidth, genStrokeColor(color));
-            }
+            GradientDrawable shape =  new GradientDrawable();
+            shape.setCornerRadius(ViewUtils.dpToPx(24));
+            shape.setColor(ContextCompat.getColor(getContext(), color));
+            btn.setBackground(shape);
         }
-    }
-
-    private int genStrokeColor(int color) {
-        float hsv[] = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[2] *= 0.7f; // decrease value component
-        return Color.HSVToColor(hsv);
     }
 
     public IamAlertDialog setConfirmButtonTextColor(Integer color) {
@@ -635,12 +670,50 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
         if (mNeutralButton != null && mNeutralText != null && !text.isEmpty()) {
             mNeutralButton.setVisibility(View.VISIBLE);
             mNeutralButton.setText(mNeutralText);
+        } else {
+            if (mNeutralButton != null) {
+                mNeutralButton.setVisibility(View.GONE);
+            }
         }
         return this;
     }
 
     public IamAlertDialog setNeutralClickListener(IamAlertDialog.OnSweetClickListener listener) {
         mNeutralClickListener = listener;
+        return this;
+    }
+
+    public Integer getConfirmButtonIcon() {
+        return mConfirmButtonDrawableLeft;
+    }
+
+    public IamAlertDialog setConfirmButtonIcon(Integer drawable) {
+        this.mConfirmButtonDrawableLeft = drawable;
+        return this;
+    }
+
+    public Integer getCancelButtonIcon() {
+        return mCancelButtonDrawableLeft;
+    }
+
+    public IamAlertDialog setCancelButtonIcon(Integer drawable) {
+        this.mCancelButtonDrawableLeft = drawable;
+        return this;
+    }
+
+    public Integer getNeutralButtonIcon() {
+        return mNeutralButtonDrawableLeft;
+    }
+
+    public IamAlertDialog setNeutralButtonIcon(Integer drawable) {
+        this.mNeutralButtonDrawableLeft = drawable;
+        return this;
+    }
+
+    public IamAlertDialog showDefaultButtonIcon() {
+        this.mConfirmButtonDrawableLeft = R.drawable.ic_baseline_done_24;
+        this.mCancelButtonDrawableLeft = R.drawable.ic_baseline_close_24;
+        this.mNeutralButtonDrawableLeft = R.drawable.ic_radio_button_unchecked_24;
         return this;
     }
 
@@ -826,9 +899,9 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public class CustomAdapter extends ArrayAdapter<CommonDataItem> implements View.OnClickListener{
+    public class TextSelectionAdapter extends ArrayAdapter<DataItem> implements View.OnClickListener{
 
-        private ArrayList<CommonDataItem> dataSet;
+        private ArrayList<DataItem> dataSet;
         Context mContext;
 
         // View lookup cache
@@ -839,7 +912,7 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
             ConstraintLayout layoutItem;
         }
 
-        public CustomAdapter(ArrayList<CommonDataItem> data, Context context) {
+        public TextSelectionAdapter(ArrayList<DataItem> data, Context context) {
             super(context, R.layout.dialog_mysweetalert_listitem, data);
             this.dataSet = data;
             this.mContext=context;
@@ -850,7 +923,7 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
 
             int position=(Integer) v.getTag();
             Object object= getItem(position);
-            CommonDataItem data=(CommonDataItem)object;
+            DataItem data=(DataItem)object;
 
             if (v.getId() == R.id.layoutItem) {
                 if (mSingleSelectionClickListener != null) {
@@ -863,7 +936,7 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            CommonDataItem data = getItem(position);
+            DataItem data = getItem(position);
             ViewHolder viewHolder;
 
             final View result;
@@ -875,23 +948,28 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
                 viewHolder.tvTitle = convertView.findViewById(R.id.tvTitle);
                 viewHolder.ivIcon = convertView.findViewById(R.id.ivIcon);
 
-                if (iconSize != 32) {
-                    // set size
-                    int px = ViewUtils.dpToPx(iconSize);
-                    ViewGroup.LayoutParams params = viewHolder.ivIcon.getLayoutParams();
-                    params.width = px;
-                    params.height = px;
-                    // set margin
-//                    px = ViewUtils.dpToPx(64-iconSize);
-//                    params.setMargins(px, px, px, px);
-                    viewHolder.ivIcon.setLayoutParams(params);
-                }
-                if (tintFlag) {
-                    viewHolder.ivIcon.setImageTintList(
-                            androidx.databinding.adapters.Converters.convertColorToColorStateList(
-                                    getContext().getResources().getColor(R.color.gray, null)
-                            )
-                    );
+//                if (iconSize != 32) {
+//                    // set size
+//                    int px = ViewUtils.dpToPx(iconSize);
+//                    ViewGroup.LayoutParams params = viewHolder.ivIcon.getLayoutParams();
+//                    params.width = px;
+//                    params.height = px;
+//                    // set margin
+////                    px = ViewUtils.dpToPx(64-iconSize);
+////                    params.setMargins(px, px, px, px);
+//                    viewHolder.ivIcon.setLayoutParams(params);
+//                }
+                if (data.getIconId()!=0) {
+                    viewHolder.ivIcon.setVisibility(View.VISIBLE);
+                    if (tintFlag) {
+                        viewHolder.ivIcon.setImageTintList(
+                                androidx.databinding.adapters.Converters.convertColorToColorStateList(
+                                        getContext().getResources().getColor(R.color.gray, null)
+                                )
+                        );
+                    }
+                } else {
+                    viewHolder.ivIcon.setVisibility(View.GONE);
                 }
                 viewHolder.ivSelected = convertView.findViewById(R.id.ivSelected);
                 viewHolder.layoutItem = convertView.findViewById(R.id.layoutItem);
@@ -905,8 +983,8 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
             lastPosition = position;
 
             viewHolder.tvTitle.setText(data.getDescription());
-            if (data.getResId()>0) {
-                viewHolder.ivIcon.setImageDrawable(getContext().getDrawable(data.getResId()));
+            if (data.getIconId()>0) {
+                viewHolder.ivIcon.setImageDrawable(getContext().getDrawable(data.getIconId()));
             }
             viewHolder.layoutItem.setOnClickListener(this);
             viewHolder.layoutItem.setTag(position);
@@ -934,11 +1012,103 @@ public class IamAlertDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public IamAlertDialog setListItems(List<CommonDataItem> items, OnSingleSelectionClickListener listener) {
+    public class ButtonSelectionAdapter extends ArrayAdapter<DataItem> implements View.OnClickListener{
+
+        private ArrayList<DataItem> dataSet;
+        Context mContext;
+
+        // View lookup cache
+        private class ViewHolder {
+            Button buttonSelection;
+        }
+
+        public ButtonSelectionAdapter(ArrayList<DataItem> data, Context context) {
+            super(context, R.layout.dialog_mysweetalert_button_listitem, data);
+            this.dataSet = data;
+            this.mContext=context;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            int position=(Integer) v.getTag();
+            Object object= getItem(position);
+            DataItem data=(DataItem)object;
+
+            if (v.getId() == R.id.buttonSelection) {
+                if (mSingleSelectionClickListener != null) {
+                    mSingleSelectionClickListener.onClick(IamAlertDialog.this, position, data);
+                }
+            }
+        }
+
+        private int lastPosition = -1;
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            DataItem data = getItem(position);
+            ViewHolder viewHolder;
+
+            final View result;
+
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.dialog_mysweetalert_button_listitem, parent, false);
+                viewHolder.buttonSelection = convertView.findViewById(R.id.buttonSelection);
+
+                if (data.getIconId()!=0) {
+                    viewHolder.buttonSelection.setCompoundDrawablesWithIntrinsicBounds(data.getIconId(), 0, 0, 0);
+                } else {
+                    viewHolder.buttonSelection.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+                if (data.getColorId()!=0) {
+                    GradientDrawable shape =  new GradientDrawable();
+                    shape.setCornerRadius(ViewUtils.dpToPx(24));
+                    shape.setColor(ContextCompat.getColor(getContext(), data.getColorId()));
+                    viewHolder.buttonSelection.setBackground(shape);
+                }
+                result=convertView;
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+                result=convertView;
+            }
+
+            lastPosition = position;
+
+            viewHolder.buttonSelection.setText(data.getDescription());
+            viewHolder.buttonSelection.setOnClickListener(this);
+            viewHolder.buttonSelection.setTag(position);
+            if (mShowListSelection) {
+//                viewHolder.ivSelected.setVisibility(View.VISIBLE);
+//                if (position == mSelectedItem) {
+//                    viewHolder.ivSelected.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_radio_button_checked_24, null));
+//                    viewHolder.ivSelected.setImageTintList(
+//                            androidx.databinding.adapters.Converters.convertColorToColorStateList(
+//                                    getContext().getColor(R.color.blue)
+//                            )
+//                    );
+//                } else {
+//                    viewHolder.ivSelected.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_radio_button_unchecked_24, null));
+//                    viewHolder.ivSelected.setImageTintList(
+//                            androidx.databinding.adapters.Converters.convertColorToColorStateList(
+//                                    getContext().getColor(R.color.light_gray)
+//                            )
+//                    );
+//                }
+//            } else {
+//                viewHolder.ivSelected.setVisibility(View.GONE);
+            }
+            return result;
+        }
+    }
+
+    public IamAlertDialog setListItems(List<DataItem> items, OnSingleSelectionClickListener listener) {
         return setListItems(items, listener, false, -1);
     }
 
-    public IamAlertDialog setListItems(List<CommonDataItem> items, OnSingleSelectionClickListener listener, boolean showListSelection, int selected) {
+    public IamAlertDialog setListItems(List<DataItem> items, OnSingleSelectionClickListener listener, boolean showListSelection, int selected) {
         mListItems.clear();
         mListItems.addAll(items);
         mSingleSelectionClickListener = listener;

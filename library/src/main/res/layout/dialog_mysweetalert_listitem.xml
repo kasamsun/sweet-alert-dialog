@@ -10,34 +10,50 @@
         android:id="@+id/layoutItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         android:background="@drawable/ripple_click" >
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:dividerColor="@color/lightest_gray" />
 
         <ImageView
             android:id="@+id/ivIcon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_local_shipping_black_24dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            tools:tint="@color/grey_darken_1"
+            android:src="@drawable/ic_check_box_outline_blank_24"
+            app:layout_constraintTop_toBottomOf="@id/divider"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvTitle"/>
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/TextStyle.Title"
+            style="@style/TextStyle.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
             android:textColor="@color/gray"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivIcon" />
+            app:layout_constraintStart_toEndOf="@id/ivIcon"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="list item" />
 
         <ImageView
             android:id="@+id/ivSelected"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
             app:tint="@color/gray"
             android:src="@drawable/ic_check_box_outline_blank_24"
             app:layout_constraintTop_toTopOf="parent"

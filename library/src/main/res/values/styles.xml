@@ -54,9 +54,13 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="TextStyle.Header" parent="TextStyle">
+        <item name="android:textSize">36sp</item>
+    </style>
+
     <style name="TextStyle.EditText" parent="TextStyle">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColorHighlight">@color/blue_lighten_1</item>
+        <item name="android:textColorHighlight">@color/blue_lighten_3</item>
     </style>
 
     <style name="TextInputBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -87,8 +91,8 @@
 
     <style name="ListViewStyle" parent="@android:style/Widget.ListView">
         <item name="android:cacheColorHint">@color/transparent</item>
-        <item name="android:divider">@color/lightest_gray</item>
-        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">@color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
     </style>
 
     <style name="Button" parent="Widget.AppCompat.Button">

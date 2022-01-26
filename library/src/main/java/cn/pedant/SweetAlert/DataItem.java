@@ -1,18 +1,22 @@
 package cn.pedant.SweetAlert;
 
-public class CommonDataItem implements Listable {
+public class DataItem implements Listable {
 
-    private int resId = 0;
+    private int iconId = 0;
+    private int colorId = 0;
     private String code;
     private String description;
 
-    public CommonDataItem(String code, String description) {
+    public DataItem(String code, String description) {
+        this.iconId = 0;
+        this.colorId = 0;
         this.code = code;
         this.description = description;
     }
 
-    public CommonDataItem(int resId, String code, String description) {
-        this.resId = resId;
+    public DataItem(int iconId, int colorId, String code, String description) {
+        this.iconId = iconId;
+        this.colorId = colorId;
         this.code = code;
         this.description = description;
     }
@@ -33,12 +37,20 @@ public class CommonDataItem implements Listable {
         this.description = description;
     }
 
-    public int getResId() {
-        return resId;
+    public int getIconId() {
+        return iconId;
     }
 
-    public void setResId(int resId) {
-        this.resId = resId;
+    public void setIconId(int iconId) {
+        this.iconId = iconId;
+    }
+
+    public int getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(int colorId) {
+        this.colorId = colorId;
     }
 
     @Override
@@ -48,6 +60,6 @@ public class CommonDataItem implements Listable {
 
     @Override
     public int getIcon() {
-        return resId;
+        return iconId;
     }
 }

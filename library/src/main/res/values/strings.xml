@@ -2,10 +2,10 @@
 <resources>
     <string name="app_name">SweetAlertDialog</string>
     <string name="dialog_default_title">Here\'s a message!</string>
-    <string name="dialog_ok">ตกลง</string>
-    <string name="dialog_cancel">ยกเลิก</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
     <string name="LOADING">Loading...</string>
-    <string name="action_ok">ตกลง</string>
-    <string name="action_confirm">ตกลง</string>
-    <string name="action_cancel">ยกเลิก</string>
+    <string name="action_ok">Ok</string>
+    <string name="action_confirm">Ok</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

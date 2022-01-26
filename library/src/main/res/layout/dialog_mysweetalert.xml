@@ -16,8 +16,8 @@
         android:minWidth="300dp"
         android:orientation="vertical"
         android:paddingBottom="15dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         android:paddingTop="10dp">
 
         <ImageView
@@ -217,7 +217,7 @@
             android:gravity="center"
             android:visibility="visible"
             tools:text="message \n message \n message"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <ListView
                 android:id="@+id/list"
@@ -225,14 +225,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                tools:listitem="@layout/dialog_mysweetalert_listitem"
-                tools:itemCount="2" />
+                tools:listitem="@layout/dialog_mysweetalert_button_listitem"
+                tools:itemCount="1" />
 
         </FrameLayout>
 
         <LinearLayout
             android:id="@+id/buttons_container"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="8dp"
@@ -247,6 +247,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:visibility="gone"
+                android:layout_weight="1"
                 android:text="@string/action_cancel"
                 tools:visibility="visible" />
 
@@ -258,6 +259,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:visibility="gone"
+                android:layout_weight="1"
                 tools:text="neutral"
                 tools:visibility="visible" />
 
@@ -269,6 +271,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/action_ok"
+                android:layout_weight="1"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
