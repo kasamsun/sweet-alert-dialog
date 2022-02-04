@@ -45,11 +45,9 @@ public class SampleActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.basic_test:
-                IamAlertDialog sd = new IamAlertDialog(this);
-                sd.setCancelable(true);
-                sd.setCanceledOnTouchOutside(true);
-                sd.setContentText("Here's a message");
-                sd.show();
+                new IamAlertDialog(this)
+                        .setContentText("Here's a message")
+                        .show();
                 break;
             case R.id.under_text_test:
                 new IamAlertDialog(this)
@@ -74,16 +72,13 @@ public class SampleActivity extends Activity implements View.OnClickListener {
                         .setTitleText("Are you sure?")
                         .setContentText("Won't be able to recover this file!")
                         .setConfirmText("Later")
-                        .setCancelButton("Delete", new IamAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(IamAlertDialog IamAlertDialog) {
-                                // reuse previous dialog instance
-                                IamAlertDialog.setTitleText("Deleted!")
-                                        .setContentText("Your imaginary file has been deleted!")
-                                        .setConfirmClickListener(null)
-                                        .setCancelClickListener(null)
-                                        .changeAlertType(IamAlertDialog.SUCCESS_TYPE);
-                            }
+                        .setCancelButton("Delete", IamAlertDialog -> {
+                            // reuse previous dialog instance
+                            IamAlertDialog.setTitleText("Deleted!")
+                                    .setContentText("Your imaginary file has been deleted!")
+                                    .setConfirmClickListener(null)
+                                    .setCancelClickListener(null)
+                                    .changeAlertType(IamAlertDialog.SUCCESS_TYPE);
                         })
                         .show();
                 break;
@@ -92,27 +87,19 @@ public class SampleActivity extends Activity implements View.OnClickListener {
                         .setTitleText("Are you sure?")
                         .setContentText("Won't be able to recover this file!")
                         .showCancelButton(true)
-                        .setCancelClickListener(new IamAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(IamAlertDialog sDialog) {
-                                // reuse previous dialog instance, keep widget user state, reset them if you need
-                                sDialog.setTitleText("Cancelled!")
-                                        .setContentText("Your imaginary file is safe :)")
-                                        .setConfirmClickListener(null)
-                                        .setCancelClickListener(null)
-                                        .changeAlertType(IamAlertDialog.ERROR_TYPE);
-                            }
+                        .setCancelClickListener(sDialog -> {
+                            // reuse previous dialog instance, keep widget user state, reset them if you need
+                            sDialog.setTitleText("Cancelled!")
+                                    .setContentText("Your imaginary file is safe :)")
+                                    .setConfirmClickListener(null)
+                                    .setCancelClickListener(null)
+                                    .changeAlertType(IamAlertDialog.ERROR_TYPE);
                         })
-                        .setConfirmClickListener(new IamAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(IamAlertDialog sDialog) {
-                                sDialog.setTitleText("Deleted!")
-                                        .setContentText("Your imaginary file has been deleted!")
-                                        .setConfirmClickListener(null)
-                                        .setCancelClickListener(null)
-                                        .changeAlertType(IamAlertDialog.SUCCESS_TYPE);
-                            }
-                        })
+                        .setConfirmClickListener(sDialog -> sDialog.setTitleText("Deleted!")
+                                .setContentText("Your imaginary file has been deleted!")
+                                .setConfirmClickListener(null)
+                                .setCancelClickListener(null)
+                                .changeAlertType(IamAlertDialog.SUCCESS_TYPE))
                         .show();
                 break;
             case R.id.custom_img_test:
